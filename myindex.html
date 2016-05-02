@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+     <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<style>
+    .tabela li:nth-child(even) {
+        background-color: azure;
+    }
+    
+</style>
+    
+<script>
+  var myapp =  angular.module('myApp', []);
+    myapp.controller('namesCtrl', function($scope) {
+    $scope.names = [
+        {name:'Jani',country:'Norway'},
+        {name:'Hege',country:'Sweden'},
+        {name:'Kai',country:'Denmark'}
+    ];
+});
+myapp.run(function($rootScope){
+   $rootScope.loading=false;
+   $rootScope.pag = "page1";
+   $rootScope.$on('change',function(){
+       $rootScope.pag = "page2";
+   });
+    $rootScope.$on('change2',function(event, data){
+       $rootScope.pag = "page3";
+       $rootScope.number = data;
+   })
+});
+myapp.controller('authCtrl',function($scope,$http){
+     $http.get("http://localhost:3000/?username=fil&pass=123")
+    .then(function(response) {
+        //First function handles success
+        $scope.content = "aloh";
+        $scope.data1 = "aloa"
+    }, function(response) {
+        //Second function handles error
+        $scope.content = "Something went wrong";
+    });
+})
+myapp.controller('find',function($scope, $http){
+    $scope.test = function(){
+        var usn = $scope.user.username;
+        var pass = $scope.user.pass;
+        $http.get("http://localhost:3000/?username="+usn+"&pass="+pass+"")
+    .then(function(response) {
+        //First function handles success
+        $scope.content = "aloh";
+        $scope.data1 = "aloa";
+        $scope.$emit('change','');
+        $scope.$destroy();
+    }, function(response) {
+        //Second function handles error
+        $scope.content = "Something went wrong";
+    });
+    }            
+});
+myapp.controller('enter',['$rootScope','$scope',function($rootScope, $scope){
+    $scope.test2 = function(val){
+        $scope.$emit("change2",$scope.conf.guys);
+        $scope.$destroy();
+    }
+}])
+myapp.controller('conf',['$scope','$http', '$rootScope', function($scope,$http,$rootScope){        $http.get("http://localhost:3000/guys/"+$rootScope.number).then(function(response) {
+        $scope.myData = response.data.records;
+        $scope.loading = false;            
+    });
+    $scope.back = function(){        
+        $scope.$emit('change','');
+        $scope.$destroy();
+    }
+    //$http.get('test.json')
+      //.success(function(data) {
+        //$scope.cars = data[0].cars;
+       
+    //});
+}])
+</script>
+<meta charset="UTF-8">
+</head>
+<body ng-app="myApp">
+ <div ng-if="pag == 'page1'">
+     <div ng-include="'subfile1.html'" ></div>          
+</div>
+<div ng-if="pag == 'page2'">
+     <div ng-include="'subfile2.html'" ></div>          
+</div>
+<div ng-if="pag == 'page3'">
+     <div ng-include="'subfile3.html'" ></div>          
+</div>
+
+
+
+
+
+</body>
+</html>
+
+
+

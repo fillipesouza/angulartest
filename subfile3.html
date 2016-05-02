@@ -1,0 +1,17 @@
+<div ng-controller="conf" ng-init="loading=true" class="container">
+ <div ng-show="loading" class="col-md-7 col-xs-12" >
+     <img src="loading.gif" />
+    </div>
+ <div ng-show="!loading" class="col-md-7 col-xs-12" >
+    <ul class="tabela">
+      <li ng-repeat="x in myData">
+        {{ x.Name + ', ' + x.Country }}
+      </li>
+    </ul>     
+     <button ng-click="back()"> Back </button>
+ </div>
+ <div class="col-md-5 col-xs-12">
+     <h2> Hello Mrs Fil </h2>
+     <span class="glyphicon glyphicon-lock" > Test </span>
+ </div>
+</div>
